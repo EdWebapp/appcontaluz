@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Consumo de Energia</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Calculadora de Consumo de Energia</h1>
+        <p>Adicione seus eletrodomésticos para estimar o consumo e o custo mensal na sua conta de luz.</p>
+
+        <div class="form-container">
+            <form id="form-eletrodomestico">
+                <input type="text" id="nome" placeholder="Nome do Eletrodoméstico (ex: Geladeira)" required>
+                <input type="number" id="potencia" placeholder="Potência em Watts (W)" required>
+                <input type="number" id="horas" step="0.1" placeholder="Horas de uso por dia" required>
+                <input type="number" id="dias" value="30" placeholder="Dias de uso no mês" required>
+                <button type="submit">Adicionar à Lista</button>
+            </form>
+        </div>
+
+        <div class="tarifa-container">
+            <label for="tarifa">Valor da Tarifa (R$ por kWh):</label>
+            <input type="number" id="tarifa" step="0.01" value="0.85" placeholder="Ex: 0.85">
+        </div>
+
+        <h2>Eletrodomésticos Adicionados</h2>
+        <p class="legenda">
+            <span class="cor-vermelho"></span> Alto Consumo
+            <span class="cor-amarelo"></span> Médio Consumo
+            <span class="cor-verde"></span> Baixo Consumo
+        </p>
+        <div id="lista-eletrodomesticos">
+            </div>
+
+        <div id="totais">
+            <h3>Resumo Mensal</h3>
+            <p><strong>Consumo Total:</strong> <span id="consumo-total">0.00 kWh</span></p>
+            <p><strong>Custo Estimado Total:</strong> <span id="custo-total">R$ 0,00</span></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

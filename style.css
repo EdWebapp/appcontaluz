@@ -1,0 +1,223 @@
+/* ============================================== */
+/* CSS COMPLETO E MELHORADO             */
+/* ============================================== */
+
+/* 1. Variáveis de Cor e Configurações Globais */
+:root {
+    --cor-primaria: #007BFF;
+    --cor-primaria-escura: #0056b3;
+    --cor-texto: #34495e;
+    --cor-fundo: #f0f4f8;
+    --cor-container: #ffffff;
+    --cor-sombra: rgba(0, 0, 0, 0.08);
+    --cor-vermelho: #e74c3c;
+    --cor-amarelo: #f1c40f;
+    --cor-verde: #2ecc71;
+    --border-radius: 8px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif; /* Nova fonte aplicada */
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: var(--cor-container);
+    padding: 30px 40px;
+    border-radius: var(--border-radius);
+    /* Sombra mais suave e profissional */
+    box-shadow: 0 4px 15px var(--cor-sombra);
+}
+
+/* 2. O NOVO TÍTULO ESTILIZADO */
+h1 {
+    font-size: 2.5rem; /* Tamanho maior */
+    font-weight: 700; /* Mais peso na fonte */
+    text-align: center;
+    margin-bottom: 15px;
+    
+    /* A MÁGICA DO GRADIENTE NO TEXTO */
+    background: linear-gradient(45deg, var(--cor-primaria), #00c6ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+.container > p {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #7f8c8d;
+}
+
+h2, h3 {
+    color: var(--cor-texto);
+    border-bottom: 2px solid var(--cor-fundo);
+    padding-bottom: 10px;
+    margin-top: 40px;
+}
+
+/* 3. Formulário com Melhor Aparência */
+.form-container form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Efeito de foco nos inputs */
+input[type="text"]:focus,
+input[type="number"]:focus {
+    outline: none;
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+button[type="submit"] {
+    background: var(--cor-primaria);
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+    grid-column: 1 / -1;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--cor-primaria-escura);
+    transform: translateY(-2px); /* Efeito de elevação */
+}
+
+.tarifa-container {
+    margin-bottom: 25px;
+    background-color: var(--cor-fundo);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tarifa-container label {
+    font-weight: 600;
+}
+
+/* 4. Lista de Itens Mais Refinada */
+.legenda {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+.legenda span[class^="cor-"] {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+.cor-vermelho { background-color: var(--cor-vermelho); }
+.cor-amarelo { background-color: var(--cor-amarelo); }
+.cor-verde { background-color: var(--cor-verde); }
+
+.eletrodomestico {
+    background-color: #fff;
+    border: 1px solid #ecf0f1;
+    border-left-width: 6px;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.eletrodomestico:hover {
+    transform: scale(1.02); /* Efeito de zoom suave */
+    box-shadow: 0 4px 10px var(--cor-sombra);
+}
+
+.eletrodomestico .info h4 {
+    margin: 0 0 5px 0;
+    font-weight: 600;
+}
+
+.eletrodomestico .info p {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 0.9em;
+}
+
+.eletrodomestico .info p strong {
+    color: var(--cor-texto);
+}
+
+.eletrodomestico button.remover {
+    background: var(--cor-vermelho);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.eletrodomestico button.remover:hover {
+    opacity: 1;
+}
+
+/* Cores da escala */
+.consumo-alto { border-left-color: var(--cor-vermelho); }
+.consumo-medio { border-left-color: var(--cor-amarelo); }
+.consumo-baixo { border-left-color: var(--cor-verde); }
+
+/* 5. Totais com Mais Destaque */
+#totais {
+    margin-top: 40px;
+    padding: 20px;
+    background: var(--cor-fundo);
+    border-radius: var(--border-radius);
+    text-align: right;
+}
+
+#totais h3 {
+    text-align: left;
+    margin-top: 0;
+    border: none;
+}
+
+#totais p {
+    font-size: 1.1rem;
+    margin: 5px 0;
+}
+
+#custo-total {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--cor-primaria-escura);
+}
