@@ -3,51 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Consumo de Energia</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <title>Calculadora de Consumo de Energia Avançada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="container">
-        <h1>Calculadora de Consumo de Energia</h1>
-        <p>Adicione seus eletrodomésticos para estimar o consumo e o custo mensal na sua conta de luz.</p>
+        <h1><i class="fa-solid fa-bolt-lightning"></i> Calculadora de Consumo de Energia</h1>
+        <p>Adicione, edite e analise o consumo dos seus eletrodomésticos para entender sua conta de luz.</p>
 
-        <div class="form-container">
-            <form id="form-eletrodomestico">
-                <input type="text" id="nome" placeholder="Nome do Eletrodoméstico (ex: Geladeira)" required>
-                <input type="number" id="potencia" placeholder="Potência em Watts (W)" required>
-                <input type="number" id="horas" step="0.1" placeholder="Horas de uso por dia" required>
-                <input type="number" id="dias" value="30" placeholder="Dias de uso no mês" required>
-                <button type="submit">Adicionar à Lista</button>
-            </form>
+        <div id="dicas-container" class="hidden">
+            <h3><i class="fa-solid fa-lightbulb"></i> Dicas de Economia para <span id="dica-aparelho-nome"></span></h3>
+            <ul id="lista-dicas">
+                </ul>
+            <button id="fechar-dicas" title="Fechar Dicas">&times;</button>
         </div>
 
-        <div class="tarifa-container">
-            <label for="tarifa">Valor da Tarifa (R$ por kWh):</label>
-            <input type="number" id="tarifa" step="0.01" value="0.85" placeholder="Ex: 0.85">
+        <div class="main-content">
+            <div class="form-section">
+                <div class="form-container">
+                    <form id="form-eletrodomestico">
+                        <h3>Adicionar / Editar Eletrodoméstico</h3>
+                        
+                        <div class="preset-container">
+                            <label for="presets">Carregar Predefinição:</label>
+                            <select id="presets">
+                                <option value="">Selecione um aparelho...</option>
+                            </select>
+                        </div>
+
+                        <input type="text" id="nome" placeholder="Nome do Eletrodoméstico" required>
+                        <input type="number" id="potencia" placeholder="Potência em Watts (W)" required>
+                        <input type="number" id="horas" step="0.1" placeholder="Horas de uso por dia" required>
+                        <input type="number" id="dias" value="30" placeholder="Dias de uso no mês" required>
+                        
+                        <button type="submit" id="submit-button">
+                            <i class="fa-solid fa-plus"></i> Adicionar à Lista
+                        </button>
+                        <button type="button" id="cancel-edit-button" class="hidden">
+                            Cancelar Edição
+                        </button>
+                    </form>
+                </div>
+
+                <div class="tarifa-container">
+                    <div>
+                        <label for="tarifa">Sua Tarifa (R$ por kWh):</label>
+                        <input type="number" id="tarifa" step="0.01" value="0.78" placeholder="Ex: 0.78">
+                    </div>
+                    <div>
+                        <label for="bandeira">Bandeira Tarifária Vigente:</label>
+                        <select id="bandeira">
+                            <option value="verde">Verde (sem acréscimo)</option>
+                            <option value="amarela">Amarela</option>
+                            <option value="vermelha1">Vermelha (Patamar 1)</option>
+                            <option value="vermelha2">Vermelha (Patamar 2)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h3>Distribuição do Consumo</h3>
+                <div class="chart-container">
+                    <canvas id="consumoChart"></canvas>
+                </div>
+            </div>
         </div>
 
-        <h2>Eletrodomésticos Adicionados</h2>
-        <p class="legenda">
-            <span class="cor-vermelho"></span> Alto Consumo
-            <span class="cor-amarelo"></span> Médio Consumo
-            <span class="cor-verde"></span> Baixo Consumo
-        </p>
+        <h2><i class="fa-solid fa-list-ul"></i> Eletrodomésticos Adicionados</h2>
         <div id="lista-eletrodomesticos">
             </div>
 
         <div id="totais">
-            <h3>Resumo Mensal</h3>
+            <h3><i class="fa-solid fa-calculator"></i> Resumo Mensal</h3>
             <p><strong>Consumo Total:</strong> <span id="consumo-total">0.00 kWh</span></p>
             <p><strong>Custo Estimado Total:</strong> <span id="custo-total">R$ 0,00</span></p>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
