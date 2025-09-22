@@ -1,223 +1,267 @@
-/* ============================================== */
-/* CSS COMPLETO E MELHORADO             */
-/* ============================================== */
-
-/* 1. Variáveis de Cor e Configurações Globais */
+/* Estilos Gerais */
 :root {
-    --cor-primaria: #007BFF;
-    --cor-primaria-escura: #0056b3;
-    --cor-texto: #34495e;
-    --cor-fundo: #f0f4f8;
-    --cor-container: #ffffff;
-    --cor-sombra: rgba(0, 0, 0, 0.08);
-    --cor-vermelho: #e74c3c;
-    --cor-amarelo: #f1c40f;
-    --cor-verde: #2ecc71;
-    --border-radius: 8px;
+    --cor-primaria: #2c3e50;
+    --cor-secundaria: #3498db;
+    --cor-perigo: #e74c3c;
+    --cor-sucesso: #2ecc71;
+    --cor-aviso: #f1c40f;
+    --fundo-claro: #f4f4f9;
+    --fundo-branco: #ffffff;
+    --borda-cor: #ddd;
 }
 
 body {
-    font-family: 'Poppins', sans-serif; /* Nova fonte aplicada */
-    background-color: var(--cor-fundo);
-    color: var(--cor-texto);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--fundo-claro);
+    color: #333;
     line-height: 1.6;
     margin: 0;
     padding: 20px;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: auto;
-    background: var(--cor-container);
-    padding: 30px 40px;
-    border-radius: var(--border-radius);
-    /* Sombra mais suave e profissional */
-    box-shadow: 0 4px 15px var(--cor-sombra);
+    background: var(--fundo-branco);
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-/* 2. O NOVO TÍTULO ESTILIZADO */
-h1 {
-    font-size: 2.5rem; /* Tamanho maior */
-    font-weight: 700; /* Mais peso na fonte */
-    text-align: center;
-    margin-bottom: 15px;
-    
-    /* A MÁGICA DO GRADIENTE NO TEXTO */
-    background: linear-gradient(45deg, var(--cor-primaria), #00c6ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-fill-color: transparent;
-}
-
-.container > p {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #7f8c8d;
-}
-
-h2, h3 {
-    color: var(--cor-texto);
-    border-bottom: 2px solid var(--cor-fundo);
+h1, h2, h3 {
+    color: var(--cor-primaria);
+    border-bottom: 2px solid var(--cor-secundaria);
     padding-bottom: 10px;
-    margin-top: 40px;
+    margin-top: 20px;
+}
+h1 { font-size: 2em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.2em; border-bottom: none; }
+
+/* Dicas de Economia */
+.dicas-container {
+    background-color: #eaf5ff;
+    border: 1px solid #b8d9f5;
+    border-left: 6px solid var(--cor-secundaria);
+    padding: 20px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* 3. Formulário com Melhor Aparência */
-.form-container form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+.dicas-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dicas-container h3 {
+    margin-top: 0;
+    color: var(--cor-primaria);
+    font-size: 1.3em;
+}
+
+#lista-dicas {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0 0 0;
+}
+
+.dica-item {
+    display: flex;
+    align-items: center;
     gap: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
+    font-size: 1em;
 }
 
-input[type="text"],
-input[type="number"] {
+.dica-item i {
+    color: var(--cor-secundaria);
+    font-size: 1.2em;
+    width: 25px;
+    text-align: center;
+}
+
+#fechar-dicas {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2em;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    width: auto;
+}
+#fechar-dicas:hover {
+    color: var(--cor-primaria);
+}
+
+/* Layout Principal */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+/* Seção do Formulário */
+.form-section, .chart-section {
+    background-color: #fdfdfd;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e7e7e7;
+}
+
+input, select {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: var(--border-radius);
+    border: 1px solid var(--borda-cor);
+    border-radius: 5px;
     box-sizing: border-box;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    margin-top: 5px;
+    margin-bottom: 15px;
 }
 
-/* Efeito de foco nos inputs */
-input[type="text"]:focus,
-input[type="number"]:focus {
-    outline: none;
-    border-color: var(--cor-primaria);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
-}
-
-button[type="submit"] {
-    background: var(--cor-primaria);
+button {
+    width: 100%;
+    background-color: var(--cor-secundaria);
     color: white;
     border: none;
     padding: 12px 15px;
-    border-radius: var(--border-radius);
+    border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    font-weight: 600;
-    transition: background-color 0.3s, transform 0.2s;
-    grid-column: 1 / -1;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-button[type="submit"]:hover {
-    background-color: var(--cor-primaria-escura);
-    transform: translateY(-2px); /* Efeito de elevação */
+button:hover {
+    background-color: #2980b9;
 }
 
+button#submit-button.editing {
+    background-color: var(--cor-sucesso);
+}
+button#submit-button.editing:hover {
+    background-color: #27ae60;
+}
+
+button#cancel-edit-button {
+    background-color: #7f8c8d;
+    margin-top: 10px;
+}
+button#cancel-edit-button:hover {
+    background-color: #6c7a7b;
+}
+
+/* Tarifas */
 .tarifa-container {
-    margin-bottom: 25px;
-    background-color: var(--cor-fundo);
-    padding: 15px;
-    border-radius: var(--border-radius);
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
 }
 
-.tarifa-container label {
-    font-weight: 600;
+/* Gráfico */
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin-top: 15px;
 }
 
-/* 4. Lista de Itens Mais Refinada */
-.legenda {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    margin-bottom: 15px;
-    font-size: 0.9em;
-}
-
-.legenda span[class^="cor-"] {
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    border-radius: 3px;
-    margin-right: 5px;
-}
-.cor-vermelho { background-color: var(--cor-vermelho); }
-.cor-amarelo { background-color: var(--cor-amarelo); }
-.cor-verde { background-color: var(--cor-verde); }
-
+/* Lista de Itens */
 .eletrodomestico {
-    background-color: #fff;
-    border: 1px solid #ecf0f1;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
     border-left-width: 6px;
-    padding: 15px;
+    padding: 15px 20px;
     margin-bottom: 10px;
-    border-radius: var(--border-radius);
+    border-radius: 8px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    gap: 15px;
+    transition: box-shadow 0.2s ease;
 }
 
 .eletrodomestico:hover {
-    transform: scale(1.02); /* Efeito de zoom suave */
-    box-shadow: 0 4px 10px var(--cor-sombra);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.eletrodomestico .info h4 {
-    margin: 0 0 5px 0;
-    font-weight: 600;
+.eletrodomestico .icon {
+    font-size: 2em;
+    color: var(--cor-primaria);
+    width: 40px;
+    text-align: center;
 }
 
-.eletrodomestico .info p {
-    margin: 0;
-    color: #7f8c8d;
-    font-size: 0.9em;
+.eletrodomestico .info {
+    flex-grow: 1;
 }
 
-.eletrodomestico .info p strong {
-    color: var(--cor-texto);
-}
+.eletrodomestico h4 { margin: 0 0 5px 0; font-size: 1.1em; }
+.eletrodomestico p { margin: 0; color: #555; font-size: 0.9em; }
 
-.eletrodomestico button.remover {
-    background: var(--cor-vermelho);
-    color: white;
+.actions button {
+    background: transparent;
     border: none;
-    padding: 8px 12px;
-    border-radius: var(--border-radius);
+    color: #7f8c8d;
     cursor: pointer;
-    opacity: 0.8;
-    transition: opacity 0.3s;
+    font-size: 1.2em;
+    padding: 5px;
 }
+.actions button.edit:hover { color: var(--cor-secundaria); }
+.actions button.remove:hover { color: var(--cor-perigo); }
 
-.eletrodomestico button.remover:hover {
-    opacity: 1;
-}
+/* Cores de Consumo */
+.consumo-alto { border-left-color: var(--cor-perigo); }
+.consumo-medio { border-left-color: var(--cor-aviso); }
+.consumo-baixo { border-left-color: var(--cor-sucesso); }
 
-/* Cores da escala */
-.consumo-alto { border-left-color: var(--cor-vermelho); }
-.consumo-medio { border-left-color: var(--cor-amarelo); }
-.consumo-baixo { border-left-color: var(--cor-verde); }
-
-/* 5. Totais com Mais Destaque */
+/* Totais */
 #totais {
-    margin-top: 40px;
+    margin-top: 30px;
     padding: 20px;
-    background: var(--cor-fundo);
-    border-radius: var(--border-radius);
+    border-top: 3px solid #eee;
+    background-color: #f8f9fa;
+    border-radius: 8px;
     text-align: right;
 }
+#totais h3 { text-align: left; }
 
-#totais h3 {
-    text-align: left;
-    margin-top: 0;
-    border: none;
+/* Classes Utilitárias */
+.hidden { display: none; }
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
 }
 
-#totais p {
-    font-size: 1.1rem;
-    margin: 5px 0;
-}
-
-#custo-total {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--cor-primaria-escura);
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    .tarifa-container {
+        grid-template-columns: 1fr;
+    }
+    .eletrodomestico {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .actions {
+        width: 100%;
+        text-align: right;
+        margin-top: 10px;
+    }
 }
