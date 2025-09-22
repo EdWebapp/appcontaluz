@@ -1,129 +1,297 @@
-// Aguarda o DOM estar completamente carregado para executar o script
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Seleciona os elementos do HTML com os quais vamos interagir
+    // --- ELEMENTOS DO DOM ---
     const form = document.getElementById('form-eletrodomestico');
     const nomeInput = document.getElementById('nome');
     const potenciaInput = document.getElementById('potencia');
     const horasInput = document.getElementById('horas');
     const diasInput = document.getElementById('dias');
     const tarifaInput = document.getElementById('tarifa');
+    const bandeiraSelect = document.getElementById('bandeira');
     const listaDiv = document.getElementById('lista-eletrodomesticos');
     const consumoTotalSpan = document.getElementById('consumo-total');
     const custoTotalSpan = document.getElementById('custo-total');
+    const presetsSelect = document.getElementById('presets');
+    const submitButton = document.getElementById('submit-button');
+    const cancelEditButton = document.getElementById('cancel-edit-button');
+    const chartCanvas = document.getElementById('consumoChart').getContext('2d');
 
-    // Array para armazenar os objetos de cada eletrodoméstico
+    // --- DADOS E ESTADO DA APLICAÇÃO ---
     let eletrodomesticos = [];
+    let editIndex = null;
+    let consumoChart = null;
+    
+    // Banco de dados de dicas de economia
+    const DICAS_DE_ECONOMIA = {
+        chuveiro: [
+            { texto: 'Tome banhos mais curtos. Cada minuto a menos faz uma grande diferença.', icone: 'fa-clock' },
+            { texto: 'Nos dias quentes, use a chave na posição "Verão". O consumo pode cair até 30%.', icone: 'fa-temperature-sun' },
+            { texto: 'Limpe os furos de saída de água do chuveiro regularmente.', icone: 'fa-wrench' }
+        ],
+        geladeira: [
+            { texto: 'Não forre as prateleiras. Isso dificulta a circulação de ar e força o motor a trabalhar mais.', icone: 'fa-ban' },
+            { texto: 'Verifique se a borracha de vedação da porta está em bom estado.', icone: 'fa-user-check' },
+            { texto: 'Evite colocar alimentos quentes dentro da geladeira.', icone: 'fa-temperature-arrow-down' }
+        ],
+        ar: [ // Para 'Ar Condicionado'
+            { texto: 'Mantenha portas e janelas fechadas ao usar o ar condicionado.', icone: 'fa-door-closed' },
+            { texto: 'Limpe os filtros regularmente para garantir a eficiência do aparelho.', icone: 'fa-filter' },
+            { texto: 'Regule o termostato para uma temperatura confortável, como 23°C.', icone: 'fa-thermometer-half' }
+        ],
+        luz: [ // Para 'Lâmpada', 'Iluminação'
+            { texto: 'Sempre que possível, aproveite a luz natural.', icone: 'fa-sun' },
+            { texto: 'Apague as luzes ao sair de um cômodo.', icone: 'fa-power-off' },
+            { texto: 'Dê preferência a lâmpadas de LED, que são muito mais econômicas.', icone: 'fa-lightbulb' }
+        ],
+        standby: [ // Para 'TV', 'Computador', 'Videogame'
+            { texto: 'Desligue completamente os aparelhos da tomada quando não estiverem em uso por longos períodos.', icone: 'fa-plug-circle-xmark' },
+            { texto: 'O modo "standby" também consome energia. Use filtros de linha com interruptor.', icone: 'fa-bolt' }
+        ]
+    };
 
-    // Função principal que redesenha a lista e os totais na tela
-    function renderizarLista() {
-        // Limpa a lista atual para não duplicar itens
+    // Valores das bandeiras por kWh (base ANEEL, vigentes em Set/2025 - valores ilustrativos)
+    const VALORES_BANDEIRAS = {
+        verde: 0,
+        amarela: 0.01885,      // R$ 1,885 por 100 kWh
+        vermelha1: 0.04463,   // R$ 4,463 por 100 kWh
+        vermelha2: 0.07877    // R$ 7,877 por 100 kWh
+    };
+
+    const PRESETS = [
+        { nome: 'Chuveiro Elétrico', potencia: 5500, horas: 0.5, icon: 'fa-shower' },
+        { nome: 'Geladeira (Média)', potencia: 150, horas: 8, icon: 'fa-refrigerator' },
+        { nome: 'Ar Condicionado', potencia: 1000, horas: 8, icon: 'fa-fan' },
+        { nome: 'Televisão LED 42"', potencia: 100, horas: 5, icon: 'fa-tv' },
+        { nome: 'Micro-ondas', potencia: 1200, horas: 0.2, icon: 'fa-microwave' },
+        { nome: 'Lâmpada LED', potencia: 9, horas: 6, icon: 'fa-lightbulb' },
+        { nome: 'Computador Desktop', potencia: 300, horas: 4, icon: 'fa-desktop' }
+    ];
+
+    // --- FUNÇÕES ---
+
+    function carregarDoLocalStorage() {
+        const dadosSalvos = localStorage.getItem('eletrodomesticosApp');
+        if (dadosSalvos) {
+            eletrodomesticos = JSON.parse(dadosSalvos);
+            renderizarTudo();
+        }
+    }
+
+    function salvarNoLocalStorage() {
+        localStorage.setItem('eletrodomesticosApp', JSON.stringify(eletrodomesticos));
+    }
+
+    function renderizarTudo() {
         listaDiv.innerHTML = '';
+        if (eletrodomesticos.length === 0) {
+            listaDiv.innerHTML = '<p>Nenhum eletrodoméstico adicionado ainda.</p>';
+        }
 
-        // Ordena a lista do maior consumo para o menor
         eletrodomesticos.sort((a, b) => b.consumoMensalKWh - a.consumoMensalKWh);
 
         let consumoTotal = 0;
-        let custoTotal = 0;
-        const tarifa = parseFloat(tarifaInput.value) || 0;
+        const tarifaBase = parseFloat(tarifaInput.value) || 0;
+        const valorBandeira = VALORES_BANDEIRAS[bandeiraSelect.value] || 0;
+        const tarifaFinal = tarifaBase + valorBandeira;
 
-        // Itera sobre cada item da lista para criar seu HTML
         eletrodomesticos.forEach((item, index) => {
-            // Calcula o custo individual do item
-            const custoMensalItem = item.consumoMensalKWh * tarifa;
-
-            // Acumula os totais
+            const custoMensalItem = item.consumoMensalKWh * tarifaFinal;
             consumoTotal += item.consumoMensalKWh;
-            custoTotal += custoMensalItem;
             
-            // Define a classe de cor baseada no consumo em kWh
-            // Estes valores podem ser ajustados conforme sua necessidade
-            let classeConsumo = 'consumo-baixo'; // Verde (padrão)
-            if (item.consumoMensalKWh > 50) {
-                classeConsumo = 'consumo-alto'; // Vermelho
-            } else if (item.consumoMensalKWh > 15) {
-                classeConsumo = 'consumo-medio'; // Amarelo
-            }
-
-            // Cria o elemento div para o eletrodoméstico
+            let classeConsumo = 'consumo-baixo';
+            if (item.consumoMensalKWh > 50) classeConsumo = 'consumo-alto';
+            else if (item.consumoMensalKWh > 15) classeConsumo = 'consumo-medio';
+            
             const itemDiv = document.createElement('div');
             itemDiv.className = `eletrodomestico ${classeConsumo}`;
-            
-            // Define o conteúdo HTML do item
             itemDiv.innerHTML = `
+                <div class="icon"><i class="fa-solid ${item.icon || 'fa-plug'}"></i></div>
                 <div class="info">
                     <h4>${item.nome} (${item.potencia}W)</h4>
                     <p><strong>Consumo:</strong> ${item.consumoMensalKWh.toFixed(2)} kWh/mês</p>
                     <p><strong>Custo:</strong> ${custoMensalItem.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês</p>
                 </div>
-                <button class="remover" data-index="${index}">Remover</button>
+                <div class="actions">
+                    <button class="edit" data-index="${index}" title="Editar"><i class="fa-solid fa-pencil"></i></button>
+                    <button class="remove" data-index="${index}" title="Remover"><i class="fa-solid fa-trash"></i></button>
+                </div>
             `;
-
-            // Adiciona o item criado à lista na página
             listaDiv.appendChild(itemDiv);
         });
 
-        // Adiciona os event listeners para os novos botões de remover
-        document.querySelectorAll('.remover').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const indexParaRemover = parseInt(event.target.getAttribute('data-index'));
-                removerEletrodomestico(indexParaRemover);
-            });
-        });
-
-        // Atualiza os totais na tela
+        const custoTotal = consumoTotal * tarifaFinal;
         consumoTotalSpan.textContent = `${consumoTotal.toFixed(2)} kWh`;
         custoTotalSpan.textContent = custoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        renderizarGrafico();
     }
 
-    // Função para adicionar um novo eletrodoméstico
-    function adicionarEletrodomestico(event) {
-        event.preventDefault(); // Impede o recarregamento da página ao enviar o formulário
+    function renderizarGrafico() {
+        if (consumoChart) {
+            consumoChart.destroy();
+        }
 
-        // Pega os valores dos inputs e converte para número
+        const labels = eletrodomesticos.map(item => item.nome);
+        const data = eletrodomesticos.map(item => item.consumoMensalKWh);
+
+        consumoChart = new Chart(chartCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Consumo (kWh)',
+                    data: data,
+                    backgroundColor: ['#e74c3c', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6', '#e67e22', '#1abc9c'],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: eletrodomesticos.length > 0 },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let total = context.chart.getDatasetMeta(0).total;
+                                let percentage = ((context.raw / total) * 100).toFixed(1);
+                                return `${context.label}: ${context.raw.toFixed(2)} kWh (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function prepararEdicao(index) {
+        editIndex = index;
+        const item = eletrodomesticos[index];
+        nomeInput.value = item.nome;
+        potenciaInput.value = item.potencia;
+        horasInput.value = item.horas;
+        diasInput.value = item.dias;
+        
+        submitButton.innerHTML = '<i class="fa-solid fa-save"></i> Salvar Alterações';
+        submitButton.classList.add('editing');
+        cancelEditButton.classList.remove('hidden');
+        form.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function cancelarEdicao() {
+        editIndex = null;
+        form.reset();
+        submitButton.innerHTML = '<i class="fa-solid fa-plus"></i> Adicionar à Lista';
+        submitButton.classList.remove('editing');
+        cancelEditButton.classList.add('hidden');
+        presetsSelect.value = "";
+    }
+    
+    function exibirDicas(nomeAparelho) {
+        const dicasContainer = document.getElementById('dicas-container');
+        const listaDicas = document.getElementById('lista-dicas');
+        const nomeAparelhoSpan = document.getElementById('dica-aparelho-nome');
+        
+        const nomeLowerCase = nomeAparelho.toLowerCase();
+        let dicasEncontradas = null, nomeExibido = nomeAparelho;
+
+        if (nomeLowerCase.includes('chuveiro')) { dicasEncontradas = DICAS_DE_ECONOMIA.chuveiro; nomeExibido = "Chuveiro"; }
+        else if (nomeLowerCase.includes('geladeira') || nomeLowerCase.includes('freezer')) { dicasEncontradas = DICAS_DE_ECONOMIA.geladeira; nomeExibido = "Geladeira"; }
+        else if (nomeLowerCase.includes('ar condicionado')) { dicasEncontradas = DICAS_DE_ECONOMIA.ar; nomeExibido = "Ar Condicionado"; }
+        else if (nomeLowerCase.includes('lâmpada') || nomeLowerCase.includes('luz')) { dicasEncontradas = DICAS_DE_ECONOMIA.luz; nomeExibido = "Iluminação"; }
+        else if (nomeLowerCase.includes('tv') || nomeLowerCase.includes('computador') || nomeLowerCase.includes('console')) { dicasEncontradas = DICAS_DE_ECONOMIA.standby; nomeExibido = "Aparelhos em Standby"; }
+        
+        if (dicasEncontradas) {
+            nomeAparelhoSpan.textContent = nomeExibido;
+            listaDicas.innerHTML = '';
+            dicasEncontradas.forEach(dica => {
+                const li = document.createElement('li');
+                li.className = 'dica-item';
+                li.innerHTML = `<i class="fa-solid ${dica.icone}"></i><span>${dica.texto}</span>`;
+                listaDicas.appendChild(li);
+            });
+            dicasContainer.classList.remove('hidden');
+            setTimeout(() => dicasContainer.classList.add('visible'), 10);
+        } else {
+            dicasContainer.classList.remove('visible');
+            dicasContainer.classList.add('hidden');
+        }
+    }
+
+    function popularPresets() {
+        PRESETS.forEach(preset => {
+            const option = document.createElement('option');
+            option.value = preset.nome;
+            option.textContent = preset.nome;
+            presetsSelect.appendChild(option);
+        });
+    }
+
+    // --- EVENT LISTENERS ---
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        
         const nome = nomeInput.value;
         const potencia = parseFloat(potenciaInput.value);
         const horas = parseFloat(horasInput.value);
         const dias = parseInt(diasInput.value);
 
-        // Validação simples
-        if (!nome || isNaN(potencia) || isNaN(horas) || isNaN(dias)) {
-            alert('Por favor, preencha todos os campos corretamente.');
+        if (!nome || isNaN(potencia) || isNaN(horas) || isNaN(dias) || potencia <= 0 || horas < 0 || dias <= 0) {
+            alert('Por favor, preencha todos os campos com valores válidos.');
             return;
         }
 
-        // Cálculo do consumo: (Potência em W / 1000) * Horas de uso * Dias de uso
         const consumoMensalKWh = (potencia / 1000) * horas * dias;
+        const presetIcon = PRESETS.find(p => p.nome === nome)?.icon || 'fa-plug';
+        const novoItem = { nome, potencia, horas, dias, consumoMensalKWh, icon: presetIcon };
 
-        // Cria o objeto do novo eletrodoméstico
-        const novoEletrodomestico = {
-            nome,
-            potencia,
-            horas,
-            dias,
-            consumoMensalKWh
-        };
+        if (editIndex !== null) {
+            eletrodomesticos[editIndex] = novoItem;
+        } else {
+            eletrodomesticos.push(novoItem);
+        }
+        
+        exibirDicas(novoItem.nome);
+        salvarNoLocalStorage();
+        renderizarTudo();
+        cancelarEdicao();
+    });
 
-        // Adiciona o novo item ao nosso array de dados
-        eletrodomesticos.push(novoEletrodomestico);
+    listaDiv.addEventListener('click', (event) => {
+        const target = event.target.closest('button');
+        if (!target) return;
+        const index = parseInt(target.dataset.index);
 
-        // Limpa os campos do formulário
-        form.reset();
-        nomeInput.focus();
+        if (target.classList.contains('edit')) prepararEdicao(index);
+        else if (target.classList.contains('remove')) {
+            if (confirm(`Tem certeza que deseja remover "${eletrodomesticos[index].nome}"?`)) {
+                eletrodomesticos.splice(index, 1);
+                salvarNoLocalStorage();
+                renderizarTudo();
+            }
+        }
+    });
 
-        // Chama a função para redesenhar tudo na tela
-        renderizarLista();
-    }
+    tarifaInput.addEventListener('input', renderizarTudo);
+    bandeiraSelect.addEventListener('change', renderizarTudo);
+    cancelEditButton.addEventListener('click', cancelarEdicao);
 
-    // Função para remover um item da lista
-    function removerEletrodomestico(index) {
-        // Remove 1 item a partir do índice especificado
-        eletrodomesticos.splice(index, 1);
-        // Redesenha a lista atualizada
-        renderizarLista();
-    }
+    presetsSelect.addEventListener('change', () => {
+        const selectedPreset = PRESETS.find(p => p.nome === presetsSelect.value);
+        if (selectedPreset) {
+            nomeInput.value = selectedPreset.nome;
+            potenciaInput.value = selectedPreset.potencia;
+            horasInput.value = selectedPreset.horas;
+        }
+    });
 
-    // Adiciona os "escutadores" de eventos
-    form.addEventListener('submit', adicionarEletrodomestico);
-    tarifaInput.addEventListener('input', renderizarLista); // Atualiza os custos quando a tarifa muda
+    document.getElementById('fechar-dicas').addEventListener('click', () => {
+        const dicasContainer = document.getElementById('dicas-container');
+        dicasContainer.classList.remove('visible');
+        dicasContainer.classList.add('hidden');
+    });
+
+    // --- INICIALIZAÇÃO ---
+    popularPresets();
+    carregarDoLocalStorage();
 });
