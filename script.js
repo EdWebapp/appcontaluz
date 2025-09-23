@@ -62,7 +62,7 @@ const PRESETS = [
     { nome: 'Geladeira (Média)', potencia: 150, horas: 8, icon: 'fa-snowflake' },
     { nome: 'Ar Condicionado', potencia: 1000, horas: 8, icon: 'fa-fan' },
     { nome: 'Televisão LED 42"', potencia: 100, horas: 5, icon: 'fa-tv' },
-    { nome: 'Micro-ondas', potencia: 1200, horas: 0.2, icon: 'fa-microwave' },
+    { nome: 'Micro-ondas', potencia: 1200, horas: 0.2, icon: 'fa-fire' },
     { nome: 'Lâmpada LED', potencia: 9, horas: 6, icon: 'fa-lightbulb' },
     { nome: 'Computador Desktop', potencia: 300, horas: 4, icon: 'fa-desktop' }
 ];
@@ -294,6 +294,7 @@ const PRESETS = [
     popularPresets();
     carregarDoLocalStorage();
 });
+
 
 
 
