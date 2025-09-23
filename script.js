@@ -59,7 +59,7 @@ const DICAS_DE_ECONOMIA = {
 
 const PRESETS = [
     { nome: 'Chuveiro Elétrico', potencia: 5500, horas: 0.5, icon: 'fa-shower' },
-    { nome: 'Geladeira (Média)', potencia: 150, horas: 8, icon: 'fa-fridge' },
+    { nome: 'Geladeira (Média)', potencia: 150, horas: 8, icon: 'fa-temperature-half' },
     { nome: 'Ar Condicionado', potencia: 1000, horas: 8, icon: 'fa-fan' },
     { nome: 'Televisão LED 42"', potencia: 100, horas: 5, icon: 'fa-tv' },
     { nome: 'Micro-ondas', potencia: 1200, horas: 0.2, icon: 'fa-microwave' },
@@ -294,6 +294,7 @@ const PRESETS = [
     popularPresets();
     carregarDoLocalStorage();
 });
+
 
 
 
