@@ -57,16 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
         vermelha2: 0.07877    // R$ 7,877 por 100 kWh
     };
 
-    const PRESETS = [
-        { nome: 'Chuveiro Elétrico', potencia: 5500, horas: 0.5, icon: 'fa-shower' },
-        { nome: 'Geladeira (Média)', potencia: 150, horas: 8, icon: 'fa-refrigerator' },
-        { nome: 'Ar Condicionado', potencia: 1000, horas: 8, icon: 'fa-fan' },
-        { nome: 'Televisão LED 42"', potencia: 100, horas: 5, icon: 'fa-tv' },
-        { nome: 'Micro-ondas', potencia: 1200, horas: 0.2, icon: 'fa-microwave' },
-        { nome: 'Lâmpada LED', potencia: 9, horas: 6, icon: 'fa-lightbulb' },
-        { nome: 'Computador Desktop', potencia: 300, horas: 4, icon: 'fa-desktop' }
-    ];
-
+const PRESETS = [
+    { nome: 'Chuveiro Elétrico', potencia: 5500, horas: 0.5, icon: 'fa-shower' },
+    { nome: 'Geladeira (Média)', potencia: 150, horas: 8, icon: 'fa-fridge' },
+    { nome: 'Ar Condicionado', potencia: 1000, horas: 8, icon: 'fa-fan' },
+    { nome: 'Televisão LED 42"', potencia: 100, horas: 5, icon: 'fa-tv' },
+    { nome: 'Micro-ondas', potencia: 1200, horas: 0.2, icon: 'fa-microwave' },
+    { nome: 'Lâmpada LED', potencia: 9, horas: 6, icon: 'fa-lightbulb' },
+    { nome: 'Computador Desktop', potencia: 300, horas: 4, icon: 'fa-desktop' }
+];
     // --- FUNÇÕES ---
 
     function carregarDoLocalStorage() {
@@ -295,5 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
     popularPresets();
     carregarDoLocalStorage();
 });
+
 
 
