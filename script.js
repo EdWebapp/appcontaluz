@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const DICAS_DE_ECONOMIA = {
         chuveiro: [
             { texto: 'Tome banhos mais curtos. Cada minuto a menos faz uma grande diferença.', icone: 'fa-clock' },
-            { texto: 'Nos dias quentes, use a chave na posição "Verão". O consumo pode cair até 30%.', icone: 'fa-temperature-sun' },
+            { texto: 'Nos dias quentes, use a chave na posição "Verão". O consumo pode cair até 30%.', icone: 'fa-temperature' },
             { texto: 'Limpe os furos de saída de água do chuveiro regularmente.', icone: 'fa-wrench' }
         ],
         geladeira: [
@@ -295,3 +295,4 @@ document.addEventListener('DOMContentLoaded', () => {
     popularPresets();
     carregarDoLocalStorage();
 });
+
