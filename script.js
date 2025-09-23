@@ -22,32 +22,32 @@ document.addEventListener('DOMContentLoaded', () => {
     let consumoChart = null;
     
     // Banco de dados de dicas de economia
-    const DICAS_DE_ECONOMIA = {
-        chuveiro: [
-            { texto: 'Tome banhos mais curtos. Cada minuto a menos faz uma grande diferença.', icone: 'fa-clock' },
-            { texto: 'Nos dias quentes, use a chave na posição "Verão". O consumo pode cair até 30%.', icone: 'fa-temperature-full' },
-            { texto: 'Limpe os furos de saída de água do chuveiro regularmente.', icone: 'fa-wrench' }
-        ],
-        geladeira: [
-            { texto: 'Não forre as prateleiras. Isso dificulta a circulação de ar e força o motor a trabalhar mais.', icone: 'fa-ban' },
-            { texto: 'Verifique se a borracha de vedação da porta está em bom estado.', icone: 'fa-user-check' },
-            { texto: 'Evite colocar alimentos quentes dentro da geladeira.', icone: 'fa-temperature-arrow-down' }
-        ],
-        ar: [ // Para 'Ar Condicionado'
-            { texto: 'Mantenha portas e janelas fechadas ao usar o ar condicionado.', icone: 'fa-door-closed' },
-            { texto: 'Limpe os filtros regularmente para garantir a eficiência do aparelho.', icone: 'fa-filter' },
-            { texto: 'Regule o termostato para uma temperatura confortável, como 23°C.', icone: 'fa-thermometer-half' }
-        ],
-        luz: [ // Para 'Lâmpada', 'Iluminação'
-            { texto: 'Sempre que possível, aproveite a luz natural.', icone: 'fa-sun' },
-            { texto: 'Apague as luzes ao sair de um cômodo.', icone: 'fa-power-off' },
-            { texto: 'Dê preferência a lâmpadas de LED, que são muito mais econômicas.', icone: 'fa-lightbulb' }
-        ],
-        standby: [ // Para 'TV', 'Computador', 'Videogame'
-            { texto: 'Desligue completamente os aparelhos da tomada quando não estiverem em uso por longos períodos.', icone: 'fa-plug-circle-xmark' },
-            { texto: 'O modo "standby" também consome energia. Use filtros de linha com interruptor.', icone: 'fa-bolt' }
-        ]
-    };
+const DICAS_DE_ECONOMIA = {
+    chuveiro: [
+        { texto: 'Tome banhos mais curtos. Cada minuto a menos faz uma grande diferença.', icone: 'fa-clock' },
+        { texto: 'Nos dias quentes, use a chave na posição "Verão". O consumo pode cair até 30%.', icone: 'fa-temperature-full' },
+        { texto: 'Limpe os furos de saída de água do chuveiro regularmente.', icone: 'fa-wrench' }
+    ],
+    geladeira: [
+        { texto: 'Não forre as prateleiras. Isso dificulta a circulação de ar e força o motor a trabalhar mais.', icone: 'fa-ban' },
+        { texto: 'Verifique se a borracha de vedação da porta está em bom estado.', icone: 'fa-user-check' },
+        { texto: 'Evite colocar alimentos quentes dentro da geladeira.', icone: 'fa-temperature-half' }
+    ],
+    ar: [ // Para 'Ar Condicionado'
+        { texto: 'Mantenha portas e janelas fechadas ao usar o ar condicionado.', icone: 'fa-door-closed' },
+        { texto: 'Limpe os filtros regularmente para garantir a eficiência do aparelho.', icone: 'fa-filter' },
+        { texto: 'Regule o termostato para uma temperatura confortável, como 23°C.', icone: 'fa-thermometer-half' }
+    ],
+    luz: [ // Para 'Lâmpada', 'Iluminação'
+        { texto: 'Sempre que possível, aproveite a luz natural.', icone: 'fa-sun' },
+        { texto: 'Apague as luzes ao sair de um cômodo.', icone: 'fa-power-off' },
+        { texto: 'Dê preferência a lâmpadas de LED, que são muito mais econômicas.', icone: 'fa-lightbulb' }
+    ],
+    standby: [ // Para 'TV', 'Computador', 'Videogame'
+        { texto: 'Desligue completamente os aparelhos da tomada quando não estiverem em uso por longos períodos.', icone: 'fa-power-off' },
+        { texto: 'O modo "standby" também consome energia. Use filtros de linha com interruptor.', icone: 'fa-bolt' }
+    ]
+};
 
     // Valores das bandeiras por kWh (base ANEEL, vigentes em Set/2025 - valores ilustrativos)
     const VALORES_BANDEIRAS = {
@@ -294,6 +294,7 @@ const PRESETS = [
     popularPresets();
     carregarDoLocalStorage();
 });
+
 
 
 
