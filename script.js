@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- ELEMENTOS DO DOM ---
+    //ELEMENTOS DO DOM
     const form = document.getElementById('form-eletrodomestico');
     const nomeInput = document.getElementById('nome');
     const potenciaInput = document.getElementById('potencia');
@@ -16,12 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelEditButton = document.getElementById('cancel-edit-button');
     const chartCanvas = document.getElementById('consumoChart').getContext('2d');
 
-    // --- DADOS E ESTADO DA APLICAÇÃO ---
+    //DADOS E ESTADO DA APLICAÇÃO
     let eletrodomesticos = [];
     let editIndex = null;
     let consumoChart = null;
     
-    // Banco de dados de dicas de economia
+    //Banco de dados de dicas de economia
 const DICAS_DE_ECONOMIA = {
     chuveiro: [
         { texto: 'Tome banhos mais curtos. Cada minuto a menos faz uma grande diferença.', icone: 'fa-clock' },
@@ -49,7 +49,7 @@ const DICAS_DE_ECONOMIA = {
     ]
 };
 
-    // Valores das bandeiras por kWh (base ANEEL, vigentes em Set/2025 - valores ilustrativos)
+    //Valores das bandeiras
     const VALORES_BANDEIRAS = {
         verde: 0,
         amarela: 0.01885,      // R$ 1,885 por 100 kWh
@@ -66,7 +66,7 @@ const PRESETS = [
     { nome: 'Lâmpada LED', potencia: 9, horas: 6, icon: 'fa-lightbulb' },
     { nome: 'Computador Desktop', potencia: 300, horas: 4, icon: 'fa-desktop' }
 ];
-    // --- FUNÇÕES ---
+    //FUNÇÕES
 
     function carregarDoLocalStorage() {
         const dadosSalvos = localStorage.getItem('eletrodomesticosApp');
@@ -226,7 +226,7 @@ const PRESETS = [
         });
     }
 
-    // --- EVENT LISTENERS ---
+    //EVENT LISTENER
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         
@@ -290,10 +290,11 @@ const PRESETS = [
         dicasContainer.classList.add('hidden');
     });
 
-    // --- INICIALIZAÇÃO ---
+    //INICIALIZAÇÃO
     popularPresets();
     carregarDoLocalStorage();
 });
+
 
 
 
